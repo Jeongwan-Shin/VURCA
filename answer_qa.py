@@ -16,8 +16,8 @@ if __name__ == "__main__":
     parser.add_argument("--vlm_model", type=str, default="llava-ov_0.5b", help="VLM model to use.")
     parser.add_argument("--llm_model", type=str, default="Phi-3.5-mini-instruct", help="LLM model to use.")
     
-    parser.add_argument("--pre_task", type=str, default="gen_answer_question_ver3", help="")
-    parser.add_argument("--task", type=str, default="answer_qa", help="")
+    parser.add_argument("--pre_task", type=str, default="gen_answer_question_ver3_wo_llava_output", help="")
+    parser.add_argument("--task", type=str, default="answer_qa_wo", help="")
     parser.add_argument("--prompt_ver", type=str, default="ver1", help="Prompt version.")
     parser.add_argument("--gpu_num", type=str, default="1", help="Prompt version.")
     # vlm arguments

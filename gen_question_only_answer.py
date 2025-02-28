@@ -5,7 +5,7 @@ import os
 from tqdm import tqdm
 from srcs.utils import extract_questions
 from srcs.prompt import atomic_question_ver3 
-
+import random
 
 if __name__ == "__main__":
     
@@ -16,7 +16,8 @@ if __name__ == "__main__":
     parser.add_argument("--vlm_model", type=str, default="llava-ov_0.5b", help="VLM model to use.")
     parser.add_argument("--llm_model", type=str, default="Phi-3.5-mini-instruct", help="LLM model to use.")
     
-    parser.add_argument("--task", type=str, default="gen_answer_question", help="task:Vans_D(Video+answer to Desc), V_D(Video to Desc), V_MD(Video to Multi-view Desc)")
+    parser.add_argument("--task", type=str, default="gen_answer_question", help="")
+    parser.add_argument("--select_answer", type=str, default="wo_llava_output", help="llava_output, wo_llava_output")
     parser.add_argument("--prompt_ver", type=str, default="ver3", help="Prompt version.")
     parser.add_argument("--gpu_num", type=str, default="1", help="Prompt version.")
     
@@ -39,7 +40,7 @@ if __name__ == "__main__":
         vlm_answer_path = 'output/Llava-ov_0.5b_samples_nextqa_mc_test.jsonl'
     
     use_model_path = f"vlm_{args.vlm_model}_llm_{args.llm_model}"
-    result_output_path = f"{args.task}_{args.prompt_ver}"
+    result_output_path = f"{args.task}_{args.prompt_ver}_{args.select_answer}"
     save_folder = os.path.join(args.results_path, use_model_path, result_output_path)
     
     pre_task_load_path = os.path.join(args.results_path, use_model_path)
@@ -78,7 +79,18 @@ if __name__ == "__main__":
             
           
             quest_prompt = res['doc']['question']
-            quest_prompt+="?\nAnswer:" + res["filtered_resps"][0][3:]
+            if args.select_answer == "llava_output":
+                quest_prompt+="?\nAnswer:" + res["filtered_resps"][0][3:]
+            elif args.select_answer == "wo_llava_output":
+                try:
+                    index = ansOrder.index(res["filtered_resps"][0][0])
+                    filteredList = [opt for opt in [0,1,2,3,4] if opt != index]
+                    randomChoice = str(random.choice(filteredList))
+                    quest_prompt+="?\nAnswer:" + res["doc"]["a"+randomChoice]
+                except:
+                    filteredList = [0,1,2,3,4]
+                    randomChoice = str(random.choice(filteredList))
+                    quest_prompt+="?\nAnswer:" + res["doc"]["a"+randomChoice]
 
             o = llm.generate(
                 [atomic_question_ver3 % (quest_prompt)],

@@ -17,8 +17,8 @@ if __name__ == "__main__":
     parser.add_argument("--llm_model", type=str, default="Phi-3.5-mini-instruct", help="LLM model to use.")
     
     parser.add_argument("--task", type=str, default="gen_total_question", help="task:Vans_D(Video+answer to Desc), V_D(Video to Desc), V_MD(Video to Multi-view Desc)")
-    parser.add_argument("--prompt_ver", type=str, default="", help="Prompt version.")
-    parser.add_argument("--gpu_num", type=str, default="1", help="Prompt version.")
+    parser.add_argument("--prompt_ver", type=str, default="ver3", help="Prompt version.")
+    parser.add_argument("--gpu_num", type=str, default="0", help="Prompt version.")
     
     # vlm arguments
     parser.add_argument("--temperature", type=float, default=0.0, help="Temperature for sampling.")
@@ -39,7 +39,7 @@ if __name__ == "__main__":
         vlm_answer_path = 'output/Llava-ov_0.5b_samples_nextqa_mc_test.jsonl'
     
     use_model_path = f"vlm_{args.vlm_model}_llm_{args.llm_model}"
-    result_output_path = f"{args.task}"
+    result_output_path = f"{args.task}_{args.prompt_ver}"
     save_folder = os.path.join(args.results_path, use_model_path, result_output_path)
     
     pre_task_load_path = os.path.join(args.results_path, use_model_path)
@@ -62,7 +62,7 @@ if __name__ == "__main__":
     # generation
     ansOrder=["A","B","C","D","E"]
     task_key = args.task.split("_")[0]
-    for vid in tqdm(list(video_set)):
+    for vid in tqdm(list(video_set)[500:]):
         file_path = os.path.join(save_folder, f"{vid}.json")
         if os.path.exists(file_path):
             print(f"Skipping file {vid}.json as it already exists")
@@ -73,6 +73,8 @@ if __name__ == "__main__":
             results_dict={}
             results_dict['doc_id']=res['doc_id']
             results_dict['question']=res['doc']['question']
+            results_dict['target_answer']=res['doc']['answer']
+            results_dict['llava_output']=res["filtered_resps"][0]
             
             for n in range(5):
                 output_dict={}

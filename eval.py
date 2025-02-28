@@ -2,7 +2,7 @@ import json
 import os
 
 # results/vlm_llava-ov_0.5b_llm_Phi-3.5-mini-instruct/answer_qa_prompt-ver1
-folder_path = "results/vlm_llava-ov_0.5b_llm_Phi-3.5-mini-instruct/answer_qa_prompt-ver1"
+folder_path = "results/vlm_llava-ov_0.5b_llm_Phi-3.5-mini-instruct/answer_qa_wo_prompt-ver1"
 file_list = sorted([f for f in os.listdir(folder_path) if f.endswith('.json')])
 
 ansIdx=["A","B","C","D","E"]
@@ -33,3 +33,4 @@ for res_file_name in file_list:
                     
 
 print(results_dict)
+print((results_dict['acc_yes']+results_dict['inacc_yes'])/(results_dict['acc_no']+results_dict['inacc_no']))
