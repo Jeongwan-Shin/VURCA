@@ -1,5 +1,10 @@
-# Table_Structual_Task
+# VURCA: Video Understanding and Response Consistency Assessment
 
-## Inference_with_TATR.ipynb
-- hugging face에서 테이블 인식 및 테이블 구조 인식 모델을 laod
-- 전체 적인 테이블 인식 방법을 정리
+## Video Understanding and Response Consistency Assessment
+### Step-1:Video Question Answering
+
+### Step-2:Generationof Verification Question
+
+### Step-3:Verification Question Answering
+
+### Step-4:Evaluating Consistency
